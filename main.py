@@ -33,7 +33,7 @@ site_info = pd.read_csv('input_windfarm_info/site_info.csv', header=0)
 windfarm_fig = tur_site_display.turbinesite(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'],
                                             site_info['rotor diameter(m)'], output_path)
 
-writer = pd.ExcelWriter(os.path.join(output_path, 'result_{}.xlsx'.format(report_version_time)))
+writer = pd.ExcelWriter(os.path.join(output_path, 'Detailed-analysis-results_{}.xlsx'.format(report_version_time)))
 wake_patches = []  # 存储尾流影响扇区楔形绘图信息
 testing_patches = []  # 存储自由流扇区楔形绘图信息
 for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风机的测试扇区

@@ -33,10 +33,10 @@ def wedgeplt(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, sectors, image_prop
     :param save_path: 存储路径
     :return:
     """
-    fig = plt.figure(figsize=(12, 8), tight_layout=True)
+    fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax1 = fig.add_subplot(1, 1, 1)
     ax1.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
-    ax1.set_title('single turbine {} sector display'.format(image_property), fontsize=20)
+    ax1.set_title('Single Turbine {} Sector(s) Display'.format(image_property), fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
         ax1.text(x_axis[i], y_axis[i], label[i])
@@ -72,10 +72,10 @@ def wedgeplts(x_axis, y_axis, label, patches, image_property, save_path):
     :param save_path: 存储路径
     :return:
     """
-    fig = plt.figure(figsize=(12, 8), tight_layout=True)
+    fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax2 = fig.add_subplot(1, 1, 1)
     ax2.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
-    ax2.set_title('windfarm turbine {} sector display'.format(image_property), fontsize=20)
+    ax2.set_title('Windfarm Turbine Group {} Sectors Display'.format(image_property), fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
         ax2.text(x_axis[i], y_axis[i], label[i])
