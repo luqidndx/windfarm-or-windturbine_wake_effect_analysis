@@ -2,7 +2,10 @@
   <dictionary name="luqid">
     <words>
       <w>arctan</w>
+      <w>figsize</w>
+      <w>luqi</w>
       <w>matplotlib</w>
+      <w>savefig</w>
       <w>turbinesite</w>
       <w>windfarm</w>
       <w>xlsx</w>

@@ -9,6 +9,12 @@
 import matplotlib.pyplot as plt
 import os
 
+plt.rcParams['savefig.dpi'] = 200
+plt.rcParams['figure.dpi'] = 100
+plt.rcParams['figure.figsize'] = (8, 8)
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+
 
 def turbinesite(x_axis, y_axis, label, rotor, save_path):
     """
@@ -31,5 +37,6 @@ def turbinesite(x_axis, y_axis, label, rotor, save_path):
         ax1.text(x_axis[i], y_axis[i], label[i])
     fig.savefig(os.path.join(save_path, '风电场机位、机型示意图.png'))
     # fig.show()
+    plt.close("all")
 
     return fig
