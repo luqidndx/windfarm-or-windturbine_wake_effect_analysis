@@ -4,6 +4,7 @@
 @Created on
 @instruction：
 @Version update log: 2020.3.26优化扇区划分颜色，及绘图展现形式
+                     2020.3.27修复扇区跨越360度在intervals处理中bug，且发现最新的最新的Python-intervals已经更名为portin
 """
 
 import intervals as I
@@ -54,19 +55,31 @@ for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风
         tem_azimuth = math.degrees(np.arctan2(site_info['Y(m)'][j] - site_info['Y(m)'][i],  # Y轴坐标差
                                               site_info['X(m)'][j] - site_info['X(m)'][i]))  # X轴坐标差
         # numpy.arctan2(y-cor, x-cor)，对应的坐标系为x正方向为0，逆时针到180°，顺时针到-180°,角度为i指向j的向量
-        azimuth = angular_deflection.angular_deflection(tem_azimuth)
-        influence_sector = I.open(round(azimuth - influence_degree / 2, 2), round(azimuth + influence_degree / 2, 2))
+        azimuth = angular_deflection.angular_deflection(tem_azimuth)  # 笛卡尔坐标系转风能坐标系
+
+        if ((azimuth - influence_degree / 2) >= 0) & ((azimuth + influence_degree / 2) <= 360):  # 扇区没有跨360°
+            influence_sector = I.open(round(azimuth - influence_degree / 2, 2),
+                                      round(azimuth + influence_degree / 2, 2))
+        elif ((azimuth - influence_degree / 2) < 0) & ((azimuth + influence_degree / 2) > 0):  # 左侧跨360°
+            influence_sector = I.open(round(360 + (azimuth - influence_degree / 2), 2), 360) | I.open(0, round(
+                azimuth + influence_degree / 2, 2))
+        elif (azimuth + influence_degree / 2) > 360:  # 右侧跨360°
+            influence_sector = I.open(round(azimuth - influence_degree / 2, 2), 360) | I.open(0, round(
+                azimuth + influence_degree / 2 - 360, 2))
+        else:
+            print('有判断情况溢出！')
+
         result.loc[j, 'Ln'] = round(ln, 2)
         result.loc[j, 'Ln/Dn'] = round(ld, 2)
         result.loc[j, 'influence_degree'] = round(influence_degree, 2)
         result.loc[j, 'azimuth'] = round(azimuth, 2)
-        result.loc[j, 'influence_sector'] = influence_sector
+        result.loc[j, 'influence_sector'] = str(influence_sector)  # 转为str存入防止数据类型异常报错
         influence_sectors = influence_sectors.union(influence_sector)  # 机位影响扇区
     free_sectors = I.closed(0, 360) - influence_sectors  # 测试扇区
     result.loc[i, 'influence_sectors'] = str(influence_sectors)
-    result.loc[i, 'testing_sectors'] = str(free_sectors)
-    site_info.loc[i, 'influence_sectors'] = str(influence_sectors)
-    site_info.loc[i, 'testing_sectors'] = str(free_sectors)
+    result.loc[i, 'freeflow_sectors'] = str(free_sectors)
+    site_info.loc[i, 'influence_sectors'] = str(influence_sectors)  # site_info最终存入'Summary'的sheet
+    site_info.loc[i, 'freeflow_sectors'] = str(free_sectors)
     radii = 2 * site_info['rotor diameter(m)'][i]
     for sector_wake in list(influence_sectors):
         theta1 = 90 - sector_wake.lower  # 调整到笛卡尔坐标系的画图方向
