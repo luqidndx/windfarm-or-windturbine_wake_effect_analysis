@@ -3,7 +3,7 @@
 @author: luqi
 @Created on
 @instruction：
-@Version update log:
+@Version update log: 2020.3.26优化扇区划分颜色，及绘图展现形式
 """
 
 import intervals as I
@@ -33,10 +33,12 @@ site_info = pd.read_csv('input_windfarm_info/site_info.csv', header=0)
 windfarm_fig = tur_site_display.turbinesite(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'],
                                             site_info['rotor diameter(m)'], output_path)
 
-writer = pd.ExcelWriter(os.path.join(output_path, 'Detailed-analysis-results_{}.xlsx'.format(report_version_time)))
-wake_patches = []  # 存储尾流影响扇区楔形绘图信息
-testing_patches = []  # 存储自由流扇区楔形绘图信息
+writer = pd.ExcelWriter(os.path.join(output_path, 'Detailed-analysis-results_{}.xlsx'))
+wake_patches_all = []  # 存储尾流影响扇区楔形绘图信息
+free_patches_all = []  # 存储自由流扇区楔形绘图信息
 for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风机的测试扇区
+    wake_patches = []  # 存储尾流影响扇区楔形绘图信息
+    free_patches = []  # 存储自由流扇区楔形绘图信息
     result = site_info[['LABEL', 'X(m)', 'Y(m)']]
     influence_sectors = I.empty()
     for j in range(len(site_info['LABEL'])):  # 第二层循环，计算i号风机与所有其他风机相关位置关系、受影响扇区，并确定i号风机测试扇区
@@ -67,33 +69,40 @@ for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风
     site_info.loc[i, 'testing_sectors'] = str(testing_sectors)
     radii = 2 * site_info['rotor diameter(m)'][i]
     for sector in list(influence_sectors):
-        theta1 = 90 - sector.lower
+        theta1 = 90 - sector.lower  # 调整到笛卡尔坐标系的画图方向
         theta2 = 90 - sector.upper
         wedge = Wedge((site_info['X(m)'][i], site_info['Y(m)'][i]), radii, theta2, theta1)
+        wake_patches_all.append(wedge)
         wake_patches.append(wedge)
     for sector in list(testing_sectors):
         theta1 = 90 - sector.lower
         theta2 = 90 - sector.upper
         wedge = Wedge((site_info['X(m)'][i], site_info['Y(m)'][i]), radii, theta2, theta1)
-        testing_patches.append(wedge)
+        free_patches_all.append(wedge)
+        free_patches.append(wedge)
 
     result.to_excel(writer, sheet_name='WTG{}'.format(site_info['LABEL'][i]), startrow=0, startcol=0, index=False)
 
     """【单机位点】尾流影响扇区/测试扇区示意图绘制"""
     wedges_display.wedgeplt(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], site_info['X(m)'][i],
                             site_info['Y(m)'][i], site_info['rotor diameter(m)'][i], site_info['LABEL'][i],
-                            influence_sectors, 'wake-influenced', output_path)
+                            wake_patches, 'wake-influenced', output_path)
     wedges_display.wedgeplt(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], site_info['X(m)'][i],
                             site_info['Y(m)'][i], site_info['rotor diameter(m)'][i], site_info['LABEL'][i],
-                            testing_sectors, 'free-flow', output_path)
-site_info.to_excel(writer, sheet_name='Summary'.format(site_info['LABEL'][i]), startrow=0, startcol=0, index=False)
+                            free_patches, 'free-flow', output_path)
+    wedges_display.wedgeplt_overall(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], site_info['X(m)'][i],
+                                    site_info['Y(m)'][i], site_info['rotor diameter(m)'][i], site_info['LABEL'][i],
+                                    wake_patches, free_patches, output_path)
+site_info.to_excel(writer, sheet_name='Summary', startrow=0, startcol=0, index=False)
 writer.close()
 
 """【全场机位点】尾流影响扇区/测试扇区示意图绘制"""
-wedges_display.wedgeplts(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], wake_patches, 'wake-influenced',
+wedges_display.wedgeplts(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], wake_patches_all, 'wake-influenced',
                          output_path)  # 输出全场尾流影响扇区情况
-wedges_display.wedgeplts(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], testing_patches, 'free-flow',
+wedges_display.wedgeplts(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], free_patches_all, 'free-flow',
                          output_path)  # 输出全场自由流扇区影响情况
+wedges_display.wedgeplts_overall(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'], wake_patches_all,
+                                 free_patches_all, output_path)  # 输出全场尾流/自由流扇区影响情况
 
 end = timeit.default_timer()
 print('Running time: %s Seconds' % (end - start))

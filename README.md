@@ -1,4 +1,4 @@
-# windturbine_wake_effect_analysis
+# windTurbine_wake_effect_analysis
 
 Wake influence analysis on wind turbine（single or group), helping to determin the free-flow or wake-affected sectors
 based on IEC61400-12.
@@ -7,6 +7,7 @@ based on IEC61400-12.
 Some of the main results are listed below:
 
 ## Plot Output
+
 1. Example of windfarm turbine sites display
 ![wind-turbine-site](picture_md/风电场机位、机型示意图.png)
 
@@ -16,15 +17,23 @@ Some of the main results are listed below:
 
 
 3. Example of single turbine wake-influenced sector(s) display
-![T35-wake-influenced](picture_md/T35机位wake-influenced扇区示意图.png)
+    ![T35-wake-influenced](picture_md/T35机位wake-influenced扇区示意图.png)
 
+4. Example of single turbine wake-influenced sector(s) &free-flow sector(s) display
 
-4. Windfarm turbine group free-flow sectors display
-![windfarm-free-flow](picture_md/风电场free-flow扇区示意图.png)
+     ![T35机位尾流&自由流扇区示意图](picture_md/T35机位尾流&自由流扇区示意图.png)
 
+5. WindFarm turbine group free-flow sectors display
+   ![windfarm-free-flow](picture_md/风电场free-flow扇区示意图.png)
 
-5. Windfarm turbine group wake-influenced sectors display
-![windfarm-wake-influenced](picture_md/风电场wake-influenced扇区示意图.png)
+6. WindFarm turbine group wake-influenced sectors display
+   ![windfarm-wake-influenced](picture_md/风电场wake-influenced扇区示意图.png)
+
+7. windFarm wake-influenced sector(s) &free-flow sector(s) display
+
+   ![风电场尾流&自由流扇区示意图](picture_md/风电场尾流&自由流扇区示意图.png)
+
+   
 
 
 ## Analysis Output
