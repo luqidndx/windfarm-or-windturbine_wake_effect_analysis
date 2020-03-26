@@ -13,15 +13,15 @@ Some of the main results are listed below:
 
 
 2. Example of single turbine free-flow sector(s) display
-![T35-free-flow](picture_md/T35机位free-flow扇区示意图.png)
+![T29-free-flow](picture_md/T29机位free-flow扇区示意图.png)
 
 
 3. Example of single turbine wake-influenced sector(s) display
-    ![T35-wake-influenced](picture_md/T35机位wake-influenced扇区示意图.png)
+    ![T29-wake-influenced](picture_md/T29机位wake-influenced扇区示意图.png)
 
 4. Example of single turbine wake-influenced sector(s) &free-flow sector(s) display
 
-     ![T35机位尾流&自由流扇区示意图](picture_md/T35机位尾流&自由流扇区示意图.png)
+     ![T29机位尾流&自由流扇区示意图](picture_md/T29机位尾流&自由流扇区示意图.png)
 
 5. WindFarm turbine group free-flow sectors display
    ![windfarm-free-flow](picture_md/风电场free-flow扇区示意图.png)
