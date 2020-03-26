@@ -10,6 +10,7 @@
 import os
 from matplotlib.patches import Wedge, Circle, Polygon
 from matplotlib.collections import PatchCollection
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
 plt.rcParams['savefig.dpi'] = 200
@@ -35,7 +36,7 @@ def wedgeplt(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches, image_prop
     """
     fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax1 = fig.add_subplot(1, 1, 1)
-    ax1.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
+    tursite = ax1.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
     ax1.set_title('{} Turbine {} Sector(s) Display'.format(tur_id, image_property), fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
@@ -46,13 +47,15 @@ def wedgeplt(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches, image_prop
         # p.set_color(c='orange') # Set both the edgecolor and the facecolor.
         p.set_edgecolor(c=None)
         p.set_facecolor(c='orange')
+        legend_patch = mpatches.Patch(color='orange', label='wake-influenced sectors')  # 创建特殊的artists，添加到图例中
     elif image_property == 'free-flow':
         # p.set_color(c='green')
         p.set_edgecolor(c=None)
         p.set_facecolor(c='green')
+        legend_patch = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax1.add_collection(p)
-    ax1.legend(fontsize=10, loc='lower left')
+    ax1.legend(handles=[tursite, legend_patch], fontsize=10, loc='lower left')
     ax1.set_aspect('equal')
     # fig.colorbar(p, ax=ax1)
 
@@ -78,7 +81,7 @@ def wedgeplt_overall(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches_wak
     """
     fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax1 = fig.add_subplot(1, 1, 1)
-    ax1.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
+    tursite = ax1.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
     ax1.set_title('{} Turbine Wake&Freeflow Sector(s) Display'.format(tur_id), fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
@@ -87,13 +90,15 @@ def wedgeplt_overall(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches_wak
     p_wake = PatchCollection(patches_wake, alpha=0.6)
     p_wake.set_edgecolor(c=None)
     p_wake.set_facecolor(c='orange')
+    legend_patch_wake = mpatches.Patch(color='orange', label='wake-influenced sectors')
     p_freeflow = PatchCollection(patches_freeflow, alpha=0.6)
     p_freeflow.set_edgecolor(c=None)
     p_freeflow.set_facecolor(c='green')
+    legend_patch_freeflow = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax1.add_collection(p_wake)
     ax1.add_collection(p_freeflow)
-    ax1.legend(fontsize=10, loc='lower left')
+    ax1.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10, loc='lower left')
     ax1.set_aspect('equal')
     # fig.colorbar(p, ax=ax1)
 
@@ -115,7 +120,7 @@ def wedgeplts(x_axis, y_axis, label, patches, image_property, save_path):
     """
     fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax2 = fig.add_subplot(1, 1, 1)
-    ax2.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
+    tursite = ax2.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
     ax2.set_title('Windfarm Turbine Group {} Sectors Display'.format(image_property), fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
@@ -126,13 +131,15 @@ def wedgeplts(x_axis, y_axis, label, patches, image_property, save_path):
         # p.set_color(c='orange') # Set both the edgecolor and the facecolor.
         p.set_edgecolor(c=None)
         p.set_facecolor(c='orange')
+        legend_patch = mpatches.Patch(color='orange', label='wake-influenced sectors')  # 创建特殊的artists，添加到图例中
     elif image_property == 'free-flow':
         # p.set_color(c='green')
         p.set_edgecolor(c=None)
         p.set_facecolor(c='green')
+        legend_patch = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax2.add_collection(p)
-    ax2.legend(fontsize=10, loc='lower left')
+    ax2.legend(handles=[tursite, legend_patch], fontsize=10, loc='lower left')
     ax2.set_aspect('equal')
 
     fig.savefig(os.path.join(save_path, '风电场{}扇区示意图.png'.format(str(image_property))))
@@ -153,7 +160,7 @@ def wedgeplts_overall(x_axis, y_axis, label, patches_wake, patches_freeflow, sav
     """
     fig = plt.figure(figsize=(12, 6), tight_layout=True)
     ax2 = fig.add_subplot(1, 1, 1)
-    ax2.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
+    tursite = ax2.scatter(x_axis, y_axis, marker='^', s=20, label='Center')
     ax2.set_title('Windfarm Turbine Group Wake&Freeflow Sectors Display', fontsize=20)
 
     for i in range(0, len(x_axis)):  # 标注机位编号
@@ -162,13 +169,15 @@ def wedgeplts_overall(x_axis, y_axis, label, patches_wake, patches_freeflow, sav
     p_wake = PatchCollection(patches_wake, alpha=0.6)
     p_wake.set_edgecolor(c=None)
     p_wake.set_facecolor(c='orange')
+    legend_patch_wake = mpatches.Patch(color='orange', label='wake-influenced sectors')
     p_freeflow = PatchCollection(patches_freeflow, alpha=0.6)
     p_freeflow.set_edgecolor(c=None)
     p_freeflow.set_facecolor(c='green')
+    legend_patch_freeflow = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax2.add_collection(p_wake)
     ax2.add_collection(p_freeflow)
-    ax2.legend(fontsize=10, loc='lower left')
+    ax2.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10, loc='lower left')
     ax2.set_aspect('equal')
 
     fig.savefig(os.path.join(save_path, '风电场尾流&自由流扇区示意图.png'))

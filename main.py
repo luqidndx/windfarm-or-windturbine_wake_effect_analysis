@@ -33,7 +33,7 @@ site_info = pd.read_csv('input_windfarm_info/site_info.csv', header=0)
 windfarm_fig = tur_site_display.turbinesite(site_info['X(m)'], site_info['Y(m)'], site_info['LABEL'],
                                             site_info['rotor diameter(m)'], output_path)
 
-writer = pd.ExcelWriter(os.path.join(output_path, 'Detailed-analysis-results_{}.xlsx'))
+writer = pd.ExcelWriter(os.path.join(output_path, 'Detailed-analysis-results.xlsx'))
 wake_patches_all = []  # 存储尾流影响扇区楔形绘图信息
 free_patches_all = []  # 存储自由流扇区楔形绘图信息
 for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风机的测试扇区
@@ -62,21 +62,21 @@ for i in range(len(site_info['LABEL'])):  # 第一层主循环，循环所有风
         result.loc[j, 'azimuth'] = round(azimuth, 2)
         result.loc[j, 'influence_sector'] = influence_sector
         influence_sectors = influence_sectors.union(influence_sector)  # 机位影响扇区
-    testing_sectors = I.closed(0, 360) - influence_sectors  # 测试扇区
+    free_sectors = I.closed(0, 360) - influence_sectors  # 测试扇区
     result.loc[i, 'influence_sectors'] = str(influence_sectors)
-    result.loc[i, 'testing_sectors'] = str(testing_sectors)
+    result.loc[i, 'testing_sectors'] = str(free_sectors)
     site_info.loc[i, 'influence_sectors'] = str(influence_sectors)
-    site_info.loc[i, 'testing_sectors'] = str(testing_sectors)
+    site_info.loc[i, 'testing_sectors'] = str(free_sectors)
     radii = 2 * site_info['rotor diameter(m)'][i]
-    for sector in list(influence_sectors):
-        theta1 = 90 - sector.lower  # 调整到笛卡尔坐标系的画图方向
-        theta2 = 90 - sector.upper
+    for sector_wake in list(influence_sectors):
+        theta1 = 90 - sector_wake.lower  # 调整到笛卡尔坐标系的画图方向
+        theta2 = 90 - sector_wake.upper
         wedge = Wedge((site_info['X(m)'][i], site_info['Y(m)'][i]), radii, theta2, theta1)
         wake_patches_all.append(wedge)
         wake_patches.append(wedge)
-    for sector in list(testing_sectors):
-        theta1 = 90 - sector.lower
-        theta2 = 90 - sector.upper
+    for sector_free in list(free_sectors):
+        theta1 = 90 - sector_free.lower
+        theta2 = 90 - sector_free.upper
         wedge = Wedge((site_info['X(m)'][i], site_info['Y(m)'][i]), radii, theta2, theta1)
         free_patches_all.append(wedge)
         free_patches.append(wedge)
