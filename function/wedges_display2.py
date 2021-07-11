@@ -4,7 +4,8 @@
 @Created on
 @instruction：
 @Version update log: 用于风机点位尾流扇区展示
-                     2020.3.26优化扇区划分颜色，及绘图展现形式
+                     2020.3.26 优化扇区划分颜色，及绘图展现形式
+                     2021.3.11 相较wedges_display.py的区别是自动设置legend位置
 """
 
 import os
@@ -55,12 +56,12 @@ def wedgeplt(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches, image_prop
         legend_patch = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax1.add_collection(p)
-    ax1.legend(handles=[tursite, legend_patch], fontsize=10, loc='lower left')  # 指定legend的位置
+    ax1.legend(handles=[tursite, legend_patch], fontsize=10)  # 自动调整legend位置
     ax1.set_aspect('equal')
     # fig.colorbar(p, ax=ax1)
 
     fig.savefig(os.path.join(save_path, '{}机位{}扇区示意图.png'.format(tur_id, str(image_property))),
-                transparent=True)  # 保存背景为透明图片
+                transparent=True)
     # plt.show()
     plt.close("all")
 
@@ -99,7 +100,7 @@ def wedgeplt_overall(x_axis, y_axis, label, x_i, y_i, rotor, tur_id, patches_wak
 
     ax1.add_collection(p_wake)
     ax1.add_collection(p_freeflow)
-    ax1.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10, loc='lower left')
+    ax1.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10)
     ax1.set_aspect('equal')
     # fig.colorbar(p, ax=ax1)
 
@@ -141,7 +142,7 @@ def wedgeplts(x_axis, y_axis, label, patches, image_property, save_path):
         legend_patch = mpatches.Patch(color='green', label='free-flow sectors')
 
     ax2.add_collection(p)
-    ax2.legend(handles=[tursite, legend_patch], fontsize=10, loc='lower left')
+    ax2.legend(handles=[tursite, legend_patch], fontsize=10)
     ax2.set_aspect('equal')
 
     fig.savefig(os.path.join(save_path, '风电场{}扇区示意图.png'.format(str(image_property))),
@@ -180,7 +181,7 @@ def wedgeplts_overall(x_axis, y_axis, label, patches_wake, patches_freeflow, sav
 
     ax2.add_collection(p_wake)
     ax2.add_collection(p_freeflow)
-    ax2.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10, loc='lower left')
+    ax2.legend(handles=[tursite, legend_patch_wake, legend_patch_freeflow], fontsize=10)
     ax2.set_aspect('equal')
 
     fig.savefig(os.path.join(save_path, '风电场尾流&自由流扇区示意图.png'),
